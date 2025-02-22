@@ -1,11 +1,18 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const initWpp = require('./src/config/wppconnect');
+const cors = require('cors');
+// const initWpp = require('./src/config/wppconnect');
 
-initWpp();
+// initWpp();
 
 app.use(express.json());
+
+app.use(cors({
+  origin: 'http://localhost:3001' // URL do seu frontend
+}));
+
+app.use(cors());
 
 const conversaRoutes = require('./src/routes/conversaRoutes');
 const mensagemRoutes = require('./src/routes/mensagemRoutes');
@@ -17,7 +24,7 @@ app.use('/api/mensagem', mensagemRoutes);
 app.use('/api/empresa', registerEnterpriseRoute);
 app.use('/api/user', registerUserRoute);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9090;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });

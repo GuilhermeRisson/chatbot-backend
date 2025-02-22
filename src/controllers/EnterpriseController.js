@@ -1,10 +1,10 @@
 const Empresa = require('../models/Empresa');
-
+const Usuario = require('../models/Usuario');
 
 exports.registerNew = async (req, res) => {
-    const { nome, cnpj_cpf, email, telefone } = req.body;
+    const { nome, cnpj_cpf, email, telefone,password } = req.body;
 
-    if (!nome || !cnpj_cpf || !email || !telefone) {
+    if (!nome || !cnpj_cpf || !email || !telefone || !password) {
         return res.status(400).json({
             mensagem: 'Todos os campos são obrigatórios!'
         });
@@ -26,6 +26,14 @@ exports.registerNew = async (req, res) => {
             cnpj_cpf,
             email,
             telefone,
+        });
+
+        const novoUsuario = await Usuario.create({
+            nome: nome,
+            login:email ,
+            password: password,
+            empresa_id: novaEmpresa.id ,
+            numero:telefone 
         });
 
         return res.status(201).json({

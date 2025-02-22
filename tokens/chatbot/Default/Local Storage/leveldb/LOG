@@ -1,3 +1,2 @@
-2025/02/21-19:52:52.039 3018 Reusing MANIFEST C:\Users\gui_r\OneDrive\Documentos\chatbot\meu-chatbot-wpp\tokens\chatbot\Default\Local Storage\leveldb/MANIFEST-000001
-2025/02/21-19:52:52.045 3018 Recovering log #3
-2025/02/21-19:52:52.052 3018 Reusing old log C:\Users\gui_r\OneDrive\Documentos\chatbot\meu-chatbot-wpp\tokens\chatbot\Default\Local Storage\leveldb/000003.log 
+2025/02/21-23:12:36.791 1dc0 Creating DB C:\Users\gui_r\OneDrive\Documentos\chatbot\chatbot-backend\tokens\chatbot\Default\Local Storage\leveldb since it was missing.
+2025/02/21-23:12:36.816 1dc0 Reusing MANIFEST C:\Users\gui_r\OneDrive\Documentos\chatbot\chatbot-backend\tokens\chatbot\Default\Local Storage\leveldb/MANIFEST-000001
