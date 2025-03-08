@@ -12,17 +12,17 @@ app.use(cors({
   origin: 'http://localhost:3001' // URL do seu frontend
 }));
 
-app.use(cors());
-
 const conversaRoutes = require('./src/routes/conversaRoutes');
 const mensagemRoutes = require('./src/routes/mensagemRoutes');
 const registerEnterpriseRoute = require('./src/routes/registerEnterpriseRoute');
 const registerUserRoute = require('./src/routes/registerUserRoute');
+const whatsappRoutes = require('./src/routes/whatsapp.routes');
 
 app.use('/api/conversa', conversaRoutes);
 app.use('/api/mensagem', mensagemRoutes);
 app.use('/api/empresa', registerEnterpriseRoute);
 app.use('/api/user', registerUserRoute);
+app.use('/api/whatsapp', whatsappRoutes);
 
 const PORT = process.env.PORT || 9090;
 app.listen(PORT, () => {

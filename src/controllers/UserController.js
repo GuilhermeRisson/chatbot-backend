@@ -92,7 +92,8 @@ exports.login = async (req, res) => {
 
         return res.json({
             status: 'success',
-            token
+            token,
+            usuario
         });
     } catch (error) {
         console.error('Erro ao realizar login:', error);

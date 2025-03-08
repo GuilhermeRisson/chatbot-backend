@@ -1,22 +1,36 @@
 const wppconnect = require('@wppconnect-team/wppconnect');
 
-let client;
+const clients = new Map();
 
-const initWpp = () => {
-  if (!client) {
-    wppconnect.create({
-      session: 'chatbot',
-      puppeteerOptions: {
-        headless: false
-      }
-    }).then((cli) => {
-      client = cli;
-      console.log('🚀 Bot conectado com sucesso!');
-    }).catch((error) => {
+const initWpp = async ({ sessionName, onQRUpdated, onConnectionSuccess }) => {
+  if (!clients.has(sessionName)) {
+    try {
+      const client = await wppconnect.create({
+        session: sessionName,
+        catchQR: (base64Qr) => {
+          if (onQRUpdated) {
+            onQRUpdated(base64Qr);
+          }
+        },
+        statusFind: (statusSession) => {
+          if (statusSession === 'phoneConnected' && onConnectionSuccess) {
+            onConnectionSuccess();
+          }
+        },
+        puppeteerOptions: {
+          headless: true
+        }
+      });
+
+      clients.set(sessionName, client);
+      console.log(`🚀 Bot conectado com sucesso para a sessão ${sessionName}!`);
+      return client;
+    } catch (error) {
       console.error('Erro ao iniciar o bot:', error);
-    });
+      throw error;
+    }
   }
-  return client;
+  return clients.get(sessionName);
 };
 
-module.exports = initWpp;
+module.exports = { initWpp };
