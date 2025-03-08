@@ -1,5 +1,6 @@
 const mensagemService = require('../services/mensagemService');
 
+
 exports.listarMensagens = (req, res) => {
   const numero = req.params.numero;
   const mensagens = mensagemService.getMensagens(numero);

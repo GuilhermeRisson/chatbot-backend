@@ -1,5 +1,7 @@
 const Usuario = require('../models/Usuario');
-// const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const authConfig = require('../config/auth');
+const bcrypt = require('bcryptjs');
 
 
 exports.registerNew = async (req, res) => {
@@ -31,9 +33,14 @@ exports.registerNew = async (req, res) => {
             numero 
         });
 
+        const token = jwt.sign({ id: user.id }, authConfig.secret, {
+            expiresIn: authConfig.expiresIn,
+          });
+
         return res.status(201).json({
             mensagem: 'Novo usuario registrado com sucesso!',
-            usuario: novoUsuario
+            usuario: novoUsuario,
+            token
         });
 
     } catch (error) {
@@ -41,6 +48,59 @@ exports.registerNew = async (req, res) => {
         return res.status(500).json({
             mensagem: 'Ocorreu um erro ao registrar o usuario.',
             erro: error.message
+        });
+    }
+};
+
+
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+        return res.status(400).json({
+            status: 'error',
+            mensagem: 'Email e senha são obrigatórios'
+        });
+    }
+
+    try {
+        const usuario = await Usuario.findOne({ 
+            where: { login: email }
+        });
+        
+        if (!usuario) {
+            return res.status(401).json({
+                status: 'error',
+                mensagem: 'Email ou senha inválidos',
+                campo: 'email'
+            });
+        }
+
+        const senhaValida = await bcrypt.compare(password, usuario.password);
+        
+        if (!senhaValida) {
+            return res.status(401).json({
+                status: 'error',
+                mensagem: 'Email ou senha inválidos',
+                campo: 'password'
+            });
+        }
+
+        const token = jwt.sign({ id: usuario.id }, authConfig.secret, {
+            expiresIn: authConfig.expiresIn,
+        });
+
+        return res.json({
+            status: 'success',
+            token
+        });
+    } catch (error) {
+        console.error('Erro ao realizar login:', error);
+        
+        return res.status(500).json({
+            status: 'error',
+            mensagem: 'Erro ao realizar login',
+            erro: process.env.NODE_ENV === 'development' ? error.message : 'Erro interno do servidor'
         });
     }
 };
